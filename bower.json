@@ -1,0 +1,24 @@
+{
+  "name": "sbx-querybuilder",
+  "description": "A simple js query builder to perform queries against the SBX Cloud Application Platform",
+  "main": "index.js",
+  "authors": [
+    "Hans Ospina <hansospina@gmail.com> (https://sbxcloud.com)"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "sbx",
+    "js",
+    "javascript",
+    "query",
+    "json"
+  ],
+  "homepage": "https://sbxcloud.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

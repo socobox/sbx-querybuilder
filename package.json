@@ -1,0 +1,26 @@
+{
+  "name": "sbx-querybuilder",
+  "version": "1.0.0",
+  "description": "A simple js query builder to perform queries against the SBX Cloud Application Platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/sbxcloud/sbx-querybuilder.git"
+  },
+  "keywords": [
+    "sbx",
+    "js",
+    "javascript",
+    "query",
+    "json"
+  ],
+  "author": "Hans Ospina <hansospina@gmail.com> (https://sbxcloud.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sbxcloud/sbx-querybuilder/issues"
+  },
+  "homepage": "https://github.com/sbxcloud/sbx-querybuilder#readme"
+}
