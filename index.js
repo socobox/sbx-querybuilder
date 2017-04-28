@@ -166,6 +166,19 @@
 
     if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
       module.exports = QueryBuilder;
-    else
-      window.QueryBuilder = QueryBuilder;
+    else{
+
+      var global;
+      try {
+        global = Function('return this')() || (42, eval)('this');
+      } catch(e) {
+        global = window;
+      }
+
+      global.QueryBuilder = QueryBuilder;
+
+    }
+
+
+
   })();
