@@ -1,146 +1,171 @@
-exports.queryBuilder = function () {
-
-  let q = { page: 1, size: 1000, where: [] };
-
-  let group = {
-    "ANDOR": "AND",
-    "GROUP": []
-  };
-
-  return {
-    setDomain: function (domainId) {
-      q.domain = domainId;
-      return this;
-    },
-    setModel: function (modelName) {
-      q.row_model = modelName;
-      return this;
-    },
-    setPage: function (page) {
-      q.page = page;
-      return this;
-    },
-    setPageSize: function (pageSize) {
-      q.size = pageSize;
-      return this;
-    },
-    fetchModels: function (arrayOfModelNames) {
-      q.fetch = arrayOfModelNames;
-      return this;
-    },
-
-    addObjectArray: function (array) {
-
-      // prevent non array items to be addded.
-      if (Array && !Array.isArray(array)) {
-        return;
-      }
 
 
-      q.where = null;
+(function() {
 
-      if (!q.rows) {
-        q.rows = [];
-      }
+  var QueryBuilder = ( function () {
 
-      q.rows = q.rows.concat(array);
-      return this;
-    },
-    addObject: function (object) {
-      q.where = null;
+    var QueryBuilder  = function(){
 
-      if (!q.rows) {
-        q.rows = [];
-      }
+      var self = this;
 
-      q.rows.push(object);
-      return this;
-    },
-    whereWithKeys: function (keysArray) {
-      q.where = { keys: keysArray };
-      return this;
-    },
-    newGroup: function (connectorANDorOR) {
+      self.q = {page: 1, size: 1000, where: []};
 
-      q.rows = null;
-
-      // override array where
-      if (!Array.isArray(q.where)) {
-        q.where = [];
-      }
-
-      if (group.GROUP.length > 0) {
-        q.where.push(group);
-      }
-
-
-      group = {
-        "ANDOR": connectorANDorOR,
+      self.group = {
+        "ANDOR": "AND",
         "GROUP": []
       };
 
-      return this;
-    },
-    setReferenceJoin: function (operator, filter_field, reference_field, model, value) {
-      q.reference_join = {
-        "row_model": model,
-        "filter": {
-          "OP": operator,
-          "VAL": value,
-          "FIELD": filter_field
-        },
-        "reference_field": reference_field
-      }
-      return this;
-    },
-    addCondition: function (connectorANDorOR, fieldName, operator, value) {
-      // override array where
-      if (!Array.isArray(q.where)) {
-        q.where = [];
+      self.setDomain = function (domainId) {
+        self.q.domain = domainId;
+        return self;
       }
 
-      // first connector is ALWAYS AND
-      if (group.GROUP.length < 1) {
-        connectorANDorOR = "AND";
+      self.setModel = function (modelName) {
+        self.q.row_model = modelName;
+        return self;
       }
 
-      // allow only letters and '.' in the fields.
-      if (/^[a-zA-Z0-9\._-]+$/.test(fieldName) == false) {
-        throw new Error("Invalid FIELD NAME: " + fieldName)
+      self.setPage =  function (page) {
+        self.q.page = page;
+        return self;
       }
 
-      // check if the user is using valid operators.
-      if (!(operator == "in" || operator == "not in" || operator == "is" || operator == "is not" || operator == "!=" || operator == "=" || operator == "<" || operator == "<=" || operator == ">=" || operator == ">" || operator == "LIKE")) {
-        throw new Error("Invalid operator: " + operator)
+      self.setPageSize =  function (pageSize) {
+        self.q.size = pageSize;
+        return self;
       }
 
-      if (value === undefined) {
-        throw new Error("Invalid value: " + value);
+      self.fetchModels  = function (arrayOfModelNames) {
+        self.q.fetch = arrayOfModelNames;
+        return self;
       }
 
-      group.GROUP.push({
-        "ANDOR": connectorANDorOR,
-        "FIELD": fieldName,
-        "OP": operator,
-        "VAL": value
-      });
+      self.addObjectArray =  function (array) {
 
-      return this;
-    },
-    compile: function () {
-
-      if (q.where) {
-        delete q.rows;
-
-        if (Array.isArray(q.where) && group.GROUP.length > 0) {
-          q.where.push(group);
+        // prevent non array items to be addded.
+        if (Array && !Array.isArray(array)) {
+          return;
         }
-      } else if (q.rows) {
-        delete q.where;
+
+
+        self.q.where = null;
+
+        if (!self.q.rows) {
+          self.q.rows = [];
+        }
+
+        self.q.rows = self.q.rows.concat(array);
+        return self;
       }
 
-      return q;
-    }
-  }
+      self.addObject = function (object) {
+        self.q.where = null;
 
-};
+        if (!self.q.rows) {
+          self.q.rows = [];
+        }
+
+        self.q.rows.push(object);
+        return self;
+      }
+
+      self. whereWithKeys = function (keysArray) {
+        self.q.where = {keys: keysArray};
+        return self;
+      }
+
+      self.newGroup = function (connectorANDorOR) {
+
+        self.q.rows = null;
+
+        // override array where
+        if (!Array.isArray(self.q.where)) {
+          self.q.where = [];
+        }
+
+        if (self.group.GROUP.length > 0) {
+          self.q.where.push(self.group);
+        }
+
+
+        self.group = {
+          "ANDOR": connectorANDorOR,
+          "GROUP": []
+        };
+
+        return self;
+      }
+
+      self.setReferenceJoin =  function (operator, filter_field, reference_field, model, value) {
+        self.q.reference_join = {
+          "row_model": model,
+          "filter": {
+            "OP": operator,
+            "VAL": value,
+            "FIELD": filter_field
+          },
+          "reference_field": reference_field
+        }
+        return self;
+      }
+
+      self.addCondition = function (connectorANDorOR, fieldName, operator, value) {
+        // override array where
+        if (!Array.isArray(self.q.where)) {
+          self.q.where = [];
+        }
+
+        // first connector is ALWAYS AND
+        if (self.group.GROUP.length < 1) {
+          connectorANDorOR = "AND";
+        }
+
+        // allow only letters and '.' in the fields.
+        if (/^[a-zA-Z0-9\._-]+$/.test(fieldName) == false) {
+          throw new Error("Invalid FIELD NAME: " + fieldName)
+        }
+
+        // check if the user is using valid operators.
+        if (!(operator === "in" || operator === "not in" || operator === "is" || operator === "is not" || operator === "!=" || operator === "=" || operator === "<" || operator === "<=" || operator === ">=" || operator === ">" || operator === "LIKE")) {
+          throw new Error("Invalid operator: " + operator)
+        }
+
+        if (value === undefined) {
+          throw new Error("Invalid value: " + value);
+        }
+
+        self.group.GROUP.push({
+          "ANDOR": connectorANDorOR,
+          "FIELD": fieldName,
+          "OP": operator,
+          "VAL": value
+        });
+
+        return self;
+      }
+
+      self.compile = function () {
+
+        if (self.q.where) {
+          delete self.q.rows;
+
+          if (Array.isArray(self.q.where) && self.group.GROUP.length > 0) {
+            self.q.where.push(self.group);
+          }
+        } else if (self.q.rows) {
+          delete self.q.where;
+        }
+
+        return self.q;
+      }
+
+    };
+
+    return QueryBuilder;
+  })();
+
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+      module.exports = QueryBuilder;
+    else
+      window.QueryBuilder = QueryBuilder;
+  })();
