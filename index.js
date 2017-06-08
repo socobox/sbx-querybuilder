@@ -128,7 +128,7 @@
         }
 
         // check if the user is using valid operators.
-        if (!operator.indexOf(OP)) {
+        if (OP.indexOf(operator) < 0) {
           throw new Error("Invalid operator: " + operator)
         }
 
