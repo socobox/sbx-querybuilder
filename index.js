@@ -1,14 +1,14 @@
 
 
-(function() {
+(function () {
 
-  var QueryBuilder = ( function () {
+  var QueryBuilder = (function () {
 
-    var QueryBuilder  = function(){
+    var QueryBuilder = function () {
 
       var self = this;
 
-      var q = {page: 1, size: 1000, where: []};
+      var q = { page: 1, size: 1000, where: [] };
 
       var group = {
         "ANDOR": "AND",
@@ -25,22 +25,22 @@
         return self;
       }
 
-      self.setPage =  function (page) {
+      self.setPage = function (page) {
         q.page = page;
         return self;
       }
 
-      self.setPageSize =  function (pageSize) {
+      self.setPageSize = function (pageSize) {
         q.size = pageSize;
         return self;
       }
 
-      self.fetchModels  = function (arrayOfModelNames) {
+      self.fetchModels = function (arrayOfModelNames) {
         q.fetch = arrayOfModelNames;
         return self;
       }
 
-      self.addObjectArray =  function (array) {
+      self.addObjectArray = function (array) {
 
         // prevent non array items to be addded.
         if (Array && !Array.isArray(array)) {
@@ -69,8 +69,8 @@
         return self;
       }
 
-      self. whereWithKeys = function (keysArray) {
-        q.where = {keys: keysArray};
+      self.whereWithKeys = function (keysArray) {
+        q.where = { keys: keysArray };
         return self;
       }
 
@@ -96,7 +96,7 @@
         return self;
       }
 
-      self.setReferenceJoin =  function (operator, filter_field, reference_field, model, value) {
+      self.setReferenceJoin = function (operator, filter_field, reference_field, model, value) {
         q.reference_join = {
           "row_model": model,
           "filter": {
@@ -126,7 +126,7 @@
         }
 
         // check if the user is using valid operators.
-        if (!(operator === "in" || operator === "not in" || operator === "is" || operator === "is not" || operator === "!=" || operator === "=" || operator === "<" || operator === "<=" || operator === ">=" || operator === ">" || operator === "LIKE")) {
+        if (!(operator === "in" || operator === "not in" || operator === "is" || operator === "is not" || operator == '<>' || operator === "!=" || operator === "=" || operator === "<" || operator === "<=" || operator === ">=" || operator === ">" || operator === "LIKE")) {
           throw new Error("Invalid operator: " + operator)
         }
 
@@ -164,21 +164,21 @@
     return QueryBuilder;
   })();
 
-    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
-      module.exports = QueryBuilder;
-    else{
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = QueryBuilder;
+  else {
 
-      var global;
-      try {
-        global = Function('return this')() || (42, eval)('this');
-      } catch(e) {
-        global = window;
-      }
-
-      global.QueryBuilder = QueryBuilder;
-
+    var global;
+    try {
+      global = Function('return this')() || (42, eval)('this');
+    } catch (e) {
+      global = window;
     }
 
+    global.QueryBuilder = QueryBuilder;
+
+  }
 
 
-  })();
+
+})();
