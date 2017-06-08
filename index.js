@@ -15,6 +15,8 @@
         "GROUP": []
       };
 
+      var OP = ["in", "IN", "not in", "NOT IN", "is", "IS", "is not", "IS NOT", "<>", "!=", "=", "<", "<=", ">=", ">", "like", "LIKE"];
+
       self.setDomain = function (domainId) {
         q.domain = domainId;
         return self;
@@ -126,7 +128,7 @@
         }
 
         // check if the user is using valid operators.
-        if (!(operator === "in" || operator === "not in" || operator === "is" || operator === "is not" || operator == '<>' || operator === "!=" || operator === "=" || operator === "<" || operator === "<=" || operator === ">=" || operator === ">" || operator === "LIKE")) {
+        if (!operator.indexOf(OP)) {
           throw new Error("Invalid operator: " + operator)
         }
 
