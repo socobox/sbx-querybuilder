@@ -8,35 +8,35 @@
 
       var self = this;
 
-      self.q = {page: 1, size: 1000, where: []};
+      var q = {page: 1, size: 1000, where: []};
 
-      self.group = {
+      var group = {
         "ANDOR": "AND",
         "GROUP": []
       };
 
       self.setDomain = function (domainId) {
-        self.q.domain = domainId;
+        q.domain = domainId;
         return self;
       }
 
       self.setModel = function (modelName) {
-        self.q.row_model = modelName;
+        q.row_model = modelName;
         return self;
       }
 
       self.setPage =  function (page) {
-        self.q.page = page;
+        q.page = page;
         return self;
       }
 
       self.setPageSize =  function (pageSize) {
-        self.q.size = pageSize;
+        q.size = pageSize;
         return self;
       }
 
       self.fetchModels  = function (arrayOfModelNames) {
-        self.q.fetch = arrayOfModelNames;
+        q.fetch = arrayOfModelNames;
         return self;
       }
 
@@ -48,47 +48,47 @@
         }
 
 
-        self.q.where = null;
+        q.where = null;
 
-        if (!self.q.rows) {
-          self.q.rows = [];
+        if (!q.rows) {
+          q.rows = [];
         }
 
-        self.q.rows = self.q.rows.concat(array);
+        q.rows = q.rows.concat(array);
         return self;
       }
 
       self.addObject = function (object) {
-        self.q.where = null;
+        q.where = null;
 
-        if (!self.q.rows) {
-          self.q.rows = [];
+        if (!q.rows) {
+          q.rows = [];
         }
 
-        self.q.rows.push(object);
+        q.rows.push(object);
         return self;
       }
 
       self. whereWithKeys = function (keysArray) {
-        self.q.where = {keys: keysArray};
+        q.where = {keys: keysArray};
         return self;
       }
 
       self.newGroup = function (connectorANDorOR) {
 
-        self.q.rows = null;
+        q.rows = null;
 
         // override array where
-        if (!Array.isArray(self.q.where)) {
-          self.q.where = [];
+        if (!Array.isArray(q.where)) {
+          q.where = [];
         }
 
-        if (self.group.GROUP.length > 0) {
-          self.q.where.push(self.group);
+        if (group.GROUP.length > 0) {
+          q.where.push(group);
         }
 
 
-        self.group = {
+        group = {
           "ANDOR": connectorANDorOR,
           "GROUP": []
         };
@@ -97,7 +97,7 @@
       }
 
       self.setReferenceJoin =  function (operator, filter_field, reference_field, model, value) {
-        self.q.reference_join = {
+        q.reference_join = {
           "row_model": model,
           "filter": {
             "OP": operator,
@@ -111,12 +111,12 @@
 
       self.addCondition = function (connectorANDorOR, fieldName, operator, value) {
         // override array where
-        if (!Array.isArray(self.q.where)) {
-          self.q.where = [];
+        if (!Array.isArray(q.where)) {
+          q.where = [];
         }
 
         // first connector is ALWAYS AND
-        if (self.group.GROUP.length < 1) {
+        if (group.GROUP.length < 1) {
           connectorANDorOR = "AND";
         }
 
@@ -134,7 +134,7 @@
           throw new Error("Invalid value: " + value);
         }
 
-        self.group.GROUP.push({
+        group.GROUP.push({
           "ANDOR": connectorANDorOR,
           "FIELD": fieldName,
           "OP": operator,
@@ -146,17 +146,17 @@
 
       self.compile = function () {
 
-        if (self.q.where) {
-          delete self.q.rows;
+        if (q.where) {
+          delete q.rows;
 
-          if (Array.isArray(self.q.where) && self.group.GROUP.length > 0) {
-            self.q.where.push(self.group);
+          if (Array.isArray(q.where) && group.GROUP.length > 0) {
+            q.where.push(group);
           }
-        } else if (self.q.rows) {
-          delete self.q.where;
+        } else if (q.rows) {
+          delete q.where;
         }
 
-        return self.q;
+        return q;
       }
 
     };
