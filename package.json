@@ -1,6 +1,6 @@
 {
   "name": "sbx-querybuilder",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "A simple js query builder to perform queries against the SBX Cloud Application Platform",
   "main": "index.js",
   "scripts": {
