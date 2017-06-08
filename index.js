@@ -1,46 +1,48 @@
 
 
-(function() {
+(function () {
 
-  var QueryBuilder = ( function () {
+  var QueryBuilder = (function () {
 
-    var QueryBuilder  = function(){
+    var QueryBuilder = function () {
 
       var self = this;
 
-      self.q = {page: 1, size: 1000, where: []};
+      var q = { page: 1, size: 1000, where: [] };
 
-      self.group = {
+      var group = {
         "ANDOR": "AND",
         "GROUP": []
       };
 
+      var OP = ["in", "IN", "not in", "NOT IN", "is", "IS", "is not", "IS NOT", "<>", "!=", "=", "<", "<=", ">=", ">", "like", "LIKE"];
+
       self.setDomain = function (domainId) {
-        self.q.domain = domainId;
+        q.domain = domainId;
         return self;
       }
 
       self.setModel = function (modelName) {
-        self.q.row_model = modelName;
+        q.row_model = modelName;
         return self;
       }
 
-      self.setPage =  function (page) {
-        self.q.page = page;
+      self.setPage = function (page) {
+        q.page = page;
         return self;
       }
 
-      self.setPageSize =  function (pageSize) {
-        self.q.size = pageSize;
+      self.setPageSize = function (pageSize) {
+        q.size = pageSize;
         return self;
       }
 
-      self.fetchModels  = function (arrayOfModelNames) {
-        self.q.fetch = arrayOfModelNames;
+      self.fetchModels = function (arrayOfModelNames) {
+        q.fetch = arrayOfModelNames;
         return self;
       }
 
-      self.addObjectArray =  function (array) {
+      self.addObjectArray = function (array) {
 
         // prevent non array items to be addded.
         if (Array && !Array.isArray(array)) {
@@ -48,47 +50,47 @@
         }
 
 
-        self.q.where = null;
+        q.where = null;
 
-        if (!self.q.rows) {
-          self.q.rows = [];
+        if (!q.rows) {
+          q.rows = [];
         }
 
-        self.q.rows = self.q.rows.concat(array);
+        q.rows = q.rows.concat(array);
         return self;
       }
 
       self.addObject = function (object) {
-        self.q.where = null;
+        q.where = null;
 
-        if (!self.q.rows) {
-          self.q.rows = [];
+        if (!q.rows) {
+          q.rows = [];
         }
 
-        self.q.rows.push(object);
+        q.rows.push(object);
         return self;
       }
 
-      self. whereWithKeys = function (keysArray) {
-        self.q.where = {keys: keysArray};
+      self.whereWithKeys = function (keysArray) {
+        q.where = { keys: keysArray };
         return self;
       }
 
       self.newGroup = function (connectorANDorOR) {
 
-        self.q.rows = null;
+        q.rows = null;
 
         // override array where
-        if (!Array.isArray(self.q.where)) {
-          self.q.where = [];
+        if (!Array.isArray(q.where)) {
+          q.where = [];
         }
 
-        if (self.group.GROUP.length > 0) {
-          self.q.where.push(self.group);
+        if (group.GROUP.length > 0) {
+          q.where.push(group);
         }
 
 
-        self.group = {
+        group = {
           "ANDOR": connectorANDorOR,
           "GROUP": []
         };
@@ -96,8 +98,8 @@
         return self;
       }
 
-      self.setReferenceJoin =  function (operator, filter_field, reference_field, model, value) {
-        self.q.reference_join = {
+      self.setReferenceJoin = function (operator, filter_field, reference_field, model, value) {
+        q.reference_join = {
           "row_model": model,
           "filter": {
             "OP": operator,
@@ -111,12 +113,12 @@
 
       self.addCondition = function (connectorANDorOR, fieldName, operator, value) {
         // override array where
-        if (!Array.isArray(self.q.where)) {
-          self.q.where = [];
+        if (!Array.isArray(q.where)) {
+          q.where = [];
         }
 
         // first connector is ALWAYS AND
-        if (self.group.GROUP.length < 1) {
+        if (group.GROUP.length < 1) {
           connectorANDorOR = "AND";
         }
 
@@ -126,7 +128,7 @@
         }
 
         // check if the user is using valid operators.
-        if (!(operator === "in" || operator === "not in" || operator === "is" || operator === "is not" || operator === "!=" || operator === "=" || operator === "<" || operator === "<=" || operator === ">=" || operator === ">" || operator === "LIKE")) {
+        if (!operator.indexOf(OP)) {
           throw new Error("Invalid operator: " + operator)
         }
 
@@ -134,7 +136,7 @@
           throw new Error("Invalid value: " + value);
         }
 
-        self.group.GROUP.push({
+        group.GROUP.push({
           "ANDOR": connectorANDorOR,
           "FIELD": fieldName,
           "OP": operator,
@@ -146,17 +148,17 @@
 
       self.compile = function () {
 
-        if (self.q.where) {
-          delete self.q.rows;
+        if (q.where) {
+          delete q.rows;
 
-          if (Array.isArray(self.q.where) && self.group.GROUP.length > 0) {
-            self.q.where.push(self.group);
+          if (Array.isArray(q.where) && group.GROUP.length > 0) {
+            q.where.push(group);
           }
-        } else if (self.q.rows) {
-          delete self.q.where;
+        } else if (q.rows) {
+          delete q.where;
         }
 
-        return self.q;
+        return q;
       }
 
     };
@@ -164,21 +166,21 @@
     return QueryBuilder;
   })();
 
-    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
-      module.exports = QueryBuilder;
-    else{
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined')
+    module.exports = QueryBuilder;
+  else {
 
-      var global;
-      try {
-        global = Function('return this')() || (42, eval)('this');
-      } catch(e) {
-        global = window;
-      }
-
-      global.QueryBuilder = QueryBuilder;
-
+    var global;
+    try {
+      global = Function('return this')() || (42, eval)('this');
+    } catch (e) {
+      global = window;
     }
 
+    global.QueryBuilder = QueryBuilder;
+
+  }
 
 
-  })();
+
+})();
