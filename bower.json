@@ -2,7 +2,7 @@
   "name": "sbx-querybuilder",
   "description": "A simple js query builder to perform queries against the SBXCLOUD Application Platform",
   "main": "index.js",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "authors": [
     "Hans Ospina <hansospina@gmail.com> (https://sbxcloud.com)"
   ],
