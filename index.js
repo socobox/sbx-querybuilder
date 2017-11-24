@@ -36,6 +36,16 @@
         q.size = pageSize;
         return self;
       }
+      
+      self.orderBy = function (field, asc) {
+        if(!asc){
+          asc=false;
+        }
+        q.order_by = {};
+        q.order_by.ASC = asc;
+        q.order_by.FIELD = field
+        return self;
+      }
 
       self.fetchModels = function (arrayOfModelNames) {
         q.fetch = arrayOfModelNames;
@@ -156,6 +166,9 @@
           }
         } else if (q.rows) {
           delete q.where;
+          if (q.order_by){
+            delete q.order_by;
+          }
         }
 
         return q;
